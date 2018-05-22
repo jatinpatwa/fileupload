@@ -4,6 +4,7 @@ var path = require('path');
 var formidable = require('formidable');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var XML = require('pixl-xml');
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -13,11 +14,23 @@ app.get('/', function(req, res){
 });
 
 
+var doc = null;
+try {
+	doc = XML.parse(path.join(__dirname, '/uploads/test.xml'), {preserveAttributes: true});
+}
+catch (err) {
+	console.log("XML Parser Error: " + err);
+}
+console.log(doc);
+
+
 
 app.post('/upload:userName', function(req, res){
 
-
+  var ip = req.connection.remoteAddress
   var username = req.params.userName
+  console.log(ip)
+
   if (!fs.existsSync(path.join(__dirname, '/uploads/'+username))){
     mkdirp(path.join(__dirname, '/uploads/'+username), function (err) {
       if (err) console.error(err)
@@ -37,7 +50,7 @@ app.post('/upload:userName', function(req, res){
   form.uploadDir = path.join(__dirname, '/uploads/'+username);
 
   form.on('file', function(field, file) {
-    fs.rename(file.path, path.join(form.uploadDir, file.name));
+    fs.rename(file.path, path.join(form.uploadDir, ip + '_' + file.name));
   });
 
  form.on('field', function(field, userName) {
@@ -61,6 +74,10 @@ app.post('/upload:userName', function(req, res){
   form.parse(req);
 
 });
+
+
+
+
 
  var server = app.listen(3000, function(){
  console.log('Server listening on port 3000');
