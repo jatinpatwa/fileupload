@@ -18,10 +18,13 @@ app.post('/upload:userName', function(req, res){
 
 
   var username = req.params.userName
-  mkdirp(path.join(__dirname, '/uploads/'+username), function (err) {
-    if (err) console.error(err)
-    else console.log(username)
-  });
+  if (!fs.existsSync(path.join(__dirname, '/uploads/'+username))){
+    mkdirp(path.join(__dirname, '/uploads/'+username), function (err) {
+      if (err) console.error(err)
+      else console.log(username)
+    });
+  }
+  else console.log('Folder already exists, upload successful');
   // console.log(username)
 
 
