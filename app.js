@@ -39,7 +39,7 @@ fs.readFile(__dirname + '/uploads/test.xml', function(err, data) {
         service: 'gmail',
         auth: {
           user: 'coffinskull137@gmail.com',
-          pass: 'dwijatin'
+          pass: 'password'
         }
       });
 
