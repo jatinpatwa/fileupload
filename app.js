@@ -4,8 +4,10 @@ var path = require('path');
 var formidable = require('formidable');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
-var XML = require('pixl-xml');
+// var XML = require('pixl-xml');
 var xml2js = require('xml2js');
+var nodemailer = require('nodemailer');
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -24,13 +26,47 @@ app.get('/', function(req, res){
 // console.log(doc);
 
 
+
 var parser = new xml2js.Parser();
 fs.readFile(__dirname + '/uploads/test.xml', function(err, data) {
-parser.parseString(data, function (err, result) {
-    console.dir(result);
-    console.log('Done');
+  var parsed = parser.parseString(data, function (err, result) {
+      console.dir(result);
+      console.log('Done');
+      var transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        service: 'gmail',
+        auth: {
+          user: 'coffinskull137@gmail.com',
+          pass: 'dwijatin'
+        }
+      });
+
+      var mailOptions = {
+        from: 'coffinskull137@gmail.com',
+        to: 'jatinpatwa401@gmail.com',
+        subject: 'Sending Email using Node.js',
+        // alternatives: result
+        text: 'Sent from NodeMailer'
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
+  });
 });
-});
+
+
+
+
+
+
 
 
 app.post('/upload:userName', function(req, res){
