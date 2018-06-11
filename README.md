@@ -6,3 +6,9 @@ A file upload system with the following functionalities:
 2. Multiple File Upload.
 3. Can parse XML Files (test.xml in /uploads)
 4. Can send e-mails using nodemailer
+
+
+To run:
+
+1. npm install
+2. npm run dev
