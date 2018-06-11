@@ -12,14 +12,14 @@
       width: 100%;
     }
   </style>
-  <title>Mongo File Uploads</title>
+  <title>Landys+Gyr File Uploads</title>
 </head>
 
 <body>
   <div class="container">
     <div class="row">
       <div class="col-md-6 m-auto">
-        <h1 class="text-center display-4 my-4">Mongo File Uploads</h1>
+        <h1 class="text-center display-4 my-4">Landys+Gyr File Uploads</h1>
         <form action="/upload" method="POST" enctype="multipart/form-data">
           Name: <input type="text" name="uname" id="uname" class=" form-control mb-3">
           <div class="custom-file mb-3">
@@ -40,7 +40,7 @@
                       <form method="POST" action="/files/<%= file._id %>?_method=DELETE">
                         <button class="btn btn-danger btn-block mt-4">Delete</button>
                       </form>
-                      <form method="GET" action="/parse/<%= file.filename %>?_method=PARSE">
+                      <form method="POST" action="/files/<%= file.filename%>">
                         <button class="btn btn-block mt-4">Parse and email</button>
                       </form>
             </div>

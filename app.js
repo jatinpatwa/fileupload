@@ -37,7 +37,7 @@ const storage = new GridFsStorage({
   file: (req, file) => {
     return new Promise((resolve, reject) => {
         const ip = req.connection.remoteAddress
-        const filename = 'file_' + ip + '_' + file.originalname;
+        const filename = 'file_' + ip + '_' + file.originalname  + '_' + Date.now();
         const fileInfo = {
           filename: filename,
           bucketName: 'uploads'
@@ -96,7 +96,7 @@ app.get('/files', (req, res) => {
 
 // @route GET /files/:filename
 // @desc  Display single file object
-app.get('/files/:filename', (req, res) => {
+app.post('/files/:filename', (req, res) => {
   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
     // Check if file
     if (!file || file.length === 0) {
@@ -105,7 +105,41 @@ app.get('/files/:filename', (req, res) => {
       });
     }
     // File exists
-    return res.json(file);
+    var transporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
+          service: 'gmail',
+          auth: {
+            user: 'coffinskull137@gmail.com',
+            pass: 'dwijatin'
+          }
+        });
+        var mailOptions = {
+          from: 'coffinskull137@gmail.com',
+          to: 'jatinpatwa401@gmail.com',
+          subject: 'Sending Email using Node.js',
+          // alternatives: result
+          text: 'Parsed XML File',
+          attachments: [
+            {
+              filename: 'filename.xml',
+              content: 'Parsed XML',
+              contentType: 'text/xml'
+            }
+          ]
+        };
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+
+      res.redirect('/');
+
+    // return res.json(file);
   });
 });
 
@@ -148,36 +182,18 @@ app.delete('/files/:id', (req, res) => {
 // @route PARSE /parse/:filename
 // @desc Parses and emails
 
-app.get('/parse/:filename', (req, res) => {
+// app.post('/files/:filename', (req, res) => {
+//   gfs.files.findOne({ filename: req.params.filename, root:'uploads'}, (err, file) => {
+//     // Check if file
+//     if (!file || file.length === 0) {
+//       return res.status(404).json({
+//         err: 'No file exists'
+//       });
+//     }
+    // File exists
 
-  
-
-  var transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        service: 'gmail',
-        auth: {
-          user: 'coffinskull137@gmail.com',
-          pass: 'dwijatin'
-        }
-      });
-      var mailOptions = {
-        from: 'coffinskull137@gmail.com',
-        to: 'jatinpatwa401@gmail.com',
-        subject: 'Sending Email using Node.js',
-        // alternatives: result
-        text: 'Sent from NodeMailer'
-      };
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-    res.redirect('/');
-  });
+//   });
+// });
 
 
 
