@@ -118,7 +118,7 @@ app.post('/files/:filename', (req, res) => {
         var mailOptions = {
           from: 'coffinskull137@gmail.com',
           to: 'jatinpatwa401@gmail.com',
-          subject: 'Sending Email using Node.js',
+          subject: 'Parsed XML',
           // alternatives: result
           text: 'Parsed XML File',
           attachments: [
